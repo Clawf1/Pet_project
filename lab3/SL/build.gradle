@@ -1,0 +1,20 @@
+group = 'com.clf'
+version = '1.0-SNAPSHOT'
+
+dependencies {
+    implementation project(':DAL')
+    implementation 'org.slf4j:slf4j-api:2.0.0'
+
+    implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: '3.1.0-M2'
+
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
+    testImplementation 'org.mockito:mockito-core:3.11.2'
+    testImplementation 'org.mockito:mockito-junit-jupiter:4.8.0'
+}
+
+test {
+    useJUnitPlatform()
+}

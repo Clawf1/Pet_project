@@ -1,0 +1,4 @@
+rootProject.name = 'lab3'
+include 'DAL'
+include 'SL'
+include 'CL'
