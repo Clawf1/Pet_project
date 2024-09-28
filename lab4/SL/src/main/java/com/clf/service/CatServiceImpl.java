@@ -3,6 +3,7 @@ package com.clf.service;
 import com.clf.api.CatService;
 import com.clf.dto.CatDto;
 import com.clf.model.Cat;
+import com.clf.model.Role;
 import com.clf.model.User;
 import com.clf.repository.CatRepository;
 import com.clf.repository.OwnerRepository;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class CatServiceImpl implements CatService {
@@ -37,6 +39,9 @@ public class CatServiceImpl implements CatService {
 
     @Override
     public void addCat(CatDto catDto) {
+        if (!Objects.equals(catDto.getOwnerId(), getCurrentOwnerId())) {
+            throw new AccessDeniedException("You do not have permission to add a cat for another owner");
+        }
         if (catDto.getId() != null && catRepository.existsById(catDto.getId())) {
             logger.warn("Cat with ID {} already exists. Use updateCat() instead.", catDto.getId());
             return;
@@ -173,6 +178,14 @@ public class CatServiceImpl implements CatService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             return ((User) authentication.getPrincipal()).getOwner().getId();
+        }
+        return null;
+    }
+
+    public Role getCurrentRole() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            return ((User) authentication.getPrincipal()).getRole();
         }
         return null;
     }
