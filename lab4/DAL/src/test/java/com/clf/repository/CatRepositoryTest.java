@@ -1,5 +1,6 @@
 package com.clf.repository;
 
+import com.clf.DALApplication;
 import com.clf.model.Cat;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +14,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@SpringBootTest(classes = DALApplication.class)
 public class CatRepositoryTest {
     private final CatRepository catRepository;
 

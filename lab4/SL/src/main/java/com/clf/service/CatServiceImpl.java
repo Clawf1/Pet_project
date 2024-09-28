@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class CatServiceImpl implements CatService {
@@ -39,7 +40,7 @@ public class CatServiceImpl implements CatService {
 
     @Override
     public void addCat(CatDto catDto) {
-        if (!Objects.equals(catDto.getOwnerId(), getCurrentOwnerId())) {
+        if (getCurrentRole() == Role.ROLE_USER && !Objects.equals(catDto.getOwnerId(), getCurrentOwnerId())) {
             throw new AccessDeniedException("You do not have permission to add a cat for another owner");
         }
         if (catDto.getId() != null && catRepository.existsById(catDto.getId())) {
@@ -52,11 +53,14 @@ public class CatServiceImpl implements CatService {
 
     @Override
     public CatDto getCatById(Long id) {
-        Long currentOwnerId = getCurrentOwnerId();
-
         var cat = catRepository.findById(id);
+
+        if (getCurrentRole() == Role.ROLE_USER) {
+            Long currentOwnerId = getCurrentOwnerId();
+            cat.filter(c -> c.getOwner().getId().equals(currentOwnerId));
+        }
+
         return cat
-                .filter(c -> c.getOwner().getId().equals(currentOwnerId))
                 .map(CatDto::new)
                 .orElseGet(() -> {
                     logger.warn("Cat with ID {} not found", id);
@@ -66,37 +70,46 @@ public class CatServiceImpl implements CatService {
 
     @Override
     public List<CatDto> getAllCats(CatFilter filter) {
-        Long currentOwnerId = getCurrentOwnerId();
-
         List<Cat> cats = filterService.applyFilters(filter, Cat.class);
-        return cats
-                .stream()
-                .filter(c -> c.getOwner().getId().equals(currentOwnerId))
+
+        if (getCurrentRole() == Role.ROLE_USER) {
+            Long currentOwnerId = getCurrentOwnerId();
+            cats = cats.stream().filter(c -> c.getOwner().getId().equals(currentOwnerId)).toList();
+        }
+
+        return cats.stream()
                 .map(CatDto::new)
                 .toList();
     }
 
     public List<CatDto> getAllCats() {
-        Long currentOwnerId = getCurrentOwnerId();
-
         var cats = catRepository.findAll();
-        return cats
-                .stream()
-                .filter(c -> c.getOwner().getId().equals(currentOwnerId))
+
+        if (getCurrentRole() == Role.ROLE_USER) {
+            Long currentOwnerId = getCurrentOwnerId();
+            cats = cats.stream().filter(c -> c.getOwner().getId().equals(currentOwnerId)).toList();
+        }
+
+        return cats.stream()
                 .map(CatDto::new)
                 .toList();
     }
 
     @Override
     public void removeCat(CatDto catDto) {
-        Long currentOwnerId = getCurrentOwnerId();
-
-        var cat = catRepository.findById(catDto.getId()).orElseThrow(() -> new EntityNotFoundException("Cat not found"));
-        if (!currentOwnerId.equals(cat.getId())) {
-            throw new AccessDeniedException("You do not have permission to delete this cat");
+        if (getCurrentRole() == Role.ROLE_USER && !Objects.equals(catDto.getOwnerId(), getCurrentOwnerId())) {
+            throw new AccessDeniedException("You do not have permission to do this");
         }
 
         var updatedCat = dtoToCat(catDto);
+
+        if (catDto.getId() != null && catRepository.existsById(catDto.getId())) {
+            var dbCat = catRepository.findById(catDto.getId());
+            var optCat = Optional.of(updatedCat);
+
+            if (!dbCat.equals(optCat)) throw new AccessDeniedException("You do not have permission to delete this cat");
+        }
+
         catRepository.delete(updatedCat);
     }
 
@@ -104,10 +117,10 @@ public class CatServiceImpl implements CatService {
     public void removeCat(Long id) {
         var cat = catRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Cat not found"));
 
-        Long currentOwnerId = getCurrentOwnerId();
-        if (!cat.getOwner().getId().equals(currentOwnerId)) {
-            throw new AccessDeniedException("You do not have permission to delete this cat");
+        if (getCurrentRole() == Role.ROLE_USER && !Objects.equals(cat.getOwner().getId(), getCurrentOwnerId())) {
+            throw new AccessDeniedException("You do not have permission to do this");
         }
+
         catRepository.deleteById(id);
     }
 
@@ -118,9 +131,8 @@ public class CatServiceImpl implements CatService {
             return;
         }
         var cat = catRepository.findById(catDto.getId()).orElseThrow(() -> new EntityNotFoundException("Cat not found"));
-        Long currentOwnerId = getCurrentOwnerId();
 
-        if (!cat.getOwner().getId().equals(currentOwnerId)) {
+        if (!cat.getOwner().getId().equals(getCurrentOwnerId())) {
             throw new AccessDeniedException("You do not have permission to update this cat");
         }
 
@@ -174,7 +186,7 @@ public class CatServiceImpl implements CatService {
         return cat;
     }
 
-    public Long getCurrentOwnerId() {
+    private Long getCurrentOwnerId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             return ((User) authentication.getPrincipal()).getOwner().getId();
@@ -182,7 +194,7 @@ public class CatServiceImpl implements CatService {
         return null;
     }
 
-    public Role getCurrentRole() {
+    private Role getCurrentRole() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             return ((User) authentication.getPrincipal()).getRole();

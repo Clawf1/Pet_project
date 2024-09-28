@@ -37,7 +37,7 @@ public class CatController {
     }
 
     @GetMapping()
-    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN', 'USER', 'ADMIN')")
     public ResponseEntity<List<CatDto>> getAllCats(
             @RequestParam(required = false, name = "name") String name,
             @RequestParam(required = false, name = "color") String color,

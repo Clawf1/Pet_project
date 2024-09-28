@@ -1,6 +1,6 @@
 package com.clf.repository;
 
-import com.clf.Application;
+import com.clf.DALApplication;
 import com.clf.model.Owner;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -13,7 +13,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(classes = Application.class)
+@SpringBootTest(classes = DALApplication.class)
 public class OwnerRepositoryTest {
 
     private final OwnerRepository ownerRepository;
