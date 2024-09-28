@@ -3,7 +3,7 @@ services:
   postgres:
     image: postgres
     restart: always
-    container_name: lab3
+    container_name: lab4
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: 1234
