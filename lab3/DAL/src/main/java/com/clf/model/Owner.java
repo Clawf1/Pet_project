@@ -1,16 +1,15 @@
 package com.clf.model;
 
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
 
-import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Entity
 @Data
-@ToString
 @Table(name = "owners")
 public class Owner {
     @Id

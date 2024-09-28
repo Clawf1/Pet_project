@@ -1,6 +1,6 @@
 package com.clf.dao;
 
-import com.clf.Application;
+import com.clf.DALApplication;
 import com.clf.model.Cat;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +14,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@SpringBootTest(classes = DALApplication.class)
 public class CatDaoTest {
     private final CatDao catDao;
 

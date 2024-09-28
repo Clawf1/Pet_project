@@ -1,5 +1,6 @@
 package com.clf.service;
 
+import com.clf.SLApplication;
 import com.clf.dao.CatDao;
 import com.clf.dao.OwnerDao;
 import com.clf.dto.CatDto;
@@ -17,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@SpringBootTest(classes = SLApplication.class)
 class CatServiceTest {
 
     @MockBean

@@ -1,6 +1,6 @@
 package com.clf.dao;
 
-import com.clf.Application;
+import com.clf.DALApplication;
 import com.clf.model.Owner;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -11,9 +11,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SpringBootTest(classes = Application.class)
+@SpringBootTest(classes = DALApplication.class)
 public class OwnerDaoTest {
 
     private final OwnerDao ownerDao;

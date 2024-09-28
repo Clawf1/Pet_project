@@ -16,7 +16,7 @@ public class OwnerDto {
     private Date birthDate;
     private List<Long> catIds;
 
-    public OwnerDto(Owner owner){
+    public OwnerDto(Owner owner) {
         this.id = owner.getId();
         this.name = owner.getName();
         this.birthDate = owner.getBirthDate();
