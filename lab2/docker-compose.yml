@@ -1,0 +1,16 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres
+    restart: always
+    container_name: lab2
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: cats_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - cats_volumes:/var/lib/postgresql/data
+volumes:
+  cats_volumes:

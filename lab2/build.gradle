@@ -1,0 +1,19 @@
+group = 'com.clf'
+version = '1.0-SNAPSHOT'
+
+allprojects {
+    apply plugin: 'java'
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        implementation 'org.projectlombok:lombok:1.18.32'
+        annotationProcessor 'org.projectlombok:lombok:1.18.32'
+
+        implementation 'javax.persistence:javax.persistence-api:2.2'
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+}
