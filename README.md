@@ -33,7 +33,7 @@ The platform enables:
 - **Hibernate ORM**
 - **H2 Database** (for testing purposes; can be replaced with other databases like MySQL or PostgreSQL)
 - **JWT Authentication**
-- **Maven** (build tool)
+- **Gradle** (build tool)
 
 ---
 
@@ -50,18 +50,18 @@ The project is structured into three main layers:
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/your-repo-name.git
-   cd your-repo-name
+   git clone https://github.com/Clawf1/Pet_project
+   cd v1 # /v2/v3
    ```
 
 2. **Build the project:**
    ```bash
-   mvn clean install
+   ./gradlew clean build
    ```
 
 3. **Run the application:**
    ```bash
-   mvn spring-boot:run
+   ./gradlew bootRun
    ```
 
 4. **Access the application:**
@@ -113,10 +113,6 @@ The project is structured into three main layers:
 
 ---
 
-## License
-This project is licensed under the [MIT License](LICENSE).
-
----
-
 ## Contribution
 Feel free to contribute by creating pull requests or reporting issues in the GitHub repository.
+
