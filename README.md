@@ -65,7 +65,6 @@ The project is structured into three main layers:
    ```
 
 4. **Access the application:**
-   - API documentation: `http://localhost:8080/swagger-ui.html` (if Swagger is included).
    - Main endpoint: `http://localhost:8080`
 
 ---
